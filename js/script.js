@@ -5,6 +5,7 @@ class Game {
         if (!Game.instance) {
             //     Game.instance ={} // new Object();
             Game.instance = Object.create(Game.prototype);
+            Game.instance.el = document.getElementsByClassName("main")[0];
         }
         return Game.instance;
     }
@@ -17,14 +18,14 @@ class Game {
     }
     optionsInit() {
         // 给菜单添加点击事件
-        let options = this.getEle.getElementsByClassName("option")[0];
+        let options = this.el.getElementsByClassName("option")[0];
 
         options.addEventListener("click", (e) => {
             e = e || event;
             level = e.target.getAttribute("value");
+            // 清除菜单
+            this.start();
         })
-        // 清除菜单
-        this.start();
     }
     start() {
         this.loading(() => {
@@ -39,14 +40,16 @@ class Game {
         // loading动画清除
         // ...背景移动
         // 加载玩家 
+        new Player(this.level).init().show();
         // 不断地加载敌机
+
     }
     loading(callback) {
         callback();
 
     };
     append(player) {
-        this.el.className = "my-wraplain"
+        this.el.appendChild(player.el)
     }
     width() {
         if (!this.$width)
@@ -59,11 +62,14 @@ class Game {
             this.$height = this.el.offsetHeight;
         return this.$height;
     }
-
 }
+
+let game = new Game();
+game.run();
+
 // 玩家 (单例)
 class Player {
-    constructor() {
+    constructor(level) {
         if (!Player.instance) {
             Player.instance = Object.create(Player.prototype);
             this.level = level;
@@ -75,28 +81,29 @@ class Player {
         this.el.className = "my-wraplain";
         game.append(this);
         // 位置
-        this.left = (game.width() / 2) - (this.width() / 2);
-        this.top = game.height() - this.height();
+        this.left((game.width() / 2) - (this.width() / 2));
+        this.top(game.height() - this.height());
         // 键盘控制
         this.addMouseController();
 
         // this.addKeyController();
         // 
-        switch(this.level){
+        switch (this.level) {
 
         }
         return this;
     }
-    addMouseController(){
+    addMouseController() {
 
     }
-    addKeyController(){
+    addKeyController() {
 
     }
-    show(){
+    show() {
 
     }
     autoFile() {
+        console.log("FIRE!")
     }
     left(val) {
         return this.el.style.left = val + "px"
@@ -104,24 +111,45 @@ class Player {
     top(val) {
         return this.el.style.top = val + "px"
     }
-  
+
 
 }
 // 敌机
 class Enemy {
-
+    init() {
+        return this;
+    }
+    show() {
+        return this;
+    }
+    move() { }
+    hurt() { }
+    destory() { }
 }
 // 子弹
 class Bullet {
-    init() {}
-    show() { }
-    hide() { }
-    destory(){}
+    init() {
+        return this;
+    }
+    show() {
+        return this;
+    }
+    move() { }
+    destory() { }
 }
 
 // 弹药包
 class Weapon {
+    init() {
+        return this;
+    }
+    show() {
+        return this;
+    }
+    move() {
 
+    }
+    destory() {
+
+    }
 }
-
-new Game();
