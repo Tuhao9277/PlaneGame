@@ -1,7 +1,6 @@
 class Game {
     // 单例模式
     constructor() {
-        this.level = level;
         if (!Game.instance) {
             //     Game.instance ={} // new Object();
             Game.instance = Object.create(Game.prototype);
@@ -18,12 +17,15 @@ class Game {
     }
     optionsInit() {
         // 给菜单添加点击事件
-        let options = this.el.getElementsByClassName("option")[0];
+        let options = this.el.getElementsByClassName("options")[0];
 
         options.addEventListener("click", (e) => {
             e = e || event;
-            level = e.target.getAttribute("value");
+
+            this.level = e.target.getAttribute("value");
             // 清除菜单
+            options.style.display = "none";
+            // options.remove();
             this.start();
         })
     }
@@ -35,17 +37,39 @@ class Game {
 
     }
     realStart() {
-        // 等待loading结束  
-        // 清除logo
-        // loading动画清除
         // ...背景移动
+        this.bgMove();
         // 加载玩家 
         new Player(this.level).init().show();
         // 不断地加载敌机
 
     }
+    bgMove() {
+        let val = 0;
+        setInterval(() => {
+            this.el.style.backgroundPositionY = (val += 2) + "px";
+        }, 30)
+    }
     loading(callback) {
-        callback();
+        //loading图片切换
+        let ele = document.createElement("div");
+        ele.className = "loading";
+        game.el.appendChild(ele);
+        let num = 1;
+        let timer = setInterval(() => {
+            if(num == 4){
+                num =1;
+            }
+            ele.style.backgroundImage = `url(images/loading${num }.png)`;
+
+            num++;
+        }, 500);
+        setTimeout(() => {
+            clearInterval(timer);
+            ele.style.display = "none"
+            this.el.getElementsByClassName("logo")[0].remove();
+            callback();
+        }, 3000)
 
     };
     append(player) {
@@ -61,6 +85,17 @@ class Game {
         if (!this.$height)
             this.$height = this.el.offsetHeight;
         return this.$height;
+    }
+    left() {
+        if (!this.$left)
+            this.$left = this.el.offsetLeft;
+        return this.$left;
+    }
+
+    top() {
+        if (!this.$top)
+            this.$top = this.el.offsetTop;
+        return this.$top;
     }
 }
 
@@ -78,7 +113,7 @@ class Player {
     }
     init() {
         this.el = document.createElement("div");
-        this.el.className = "my-wraplain";
+        this.el.className = "my-warplain";
         game.append(this);
         // 位置
         this.left((game.width() / 2) - (this.width() / 2));
@@ -87,14 +122,21 @@ class Player {
         this.addMouseController();
 
         // this.addKeyController();
-        // 
+
+        // 子弹
         switch (this.level) {
 
         }
+        this.autoFile();
         return this;
     }
     addMouseController() {
-
+        document.addEventListener("mousemove", (e) => {
+            let _left = Math.min(game.width() - this.width(), Math.max(0, e.clientX - game.left() - this.width() / 2));
+            let _top = Math.min(game.height() - this.height(), Math.max(0, e.clientY - this.width() / 2));
+            this.left(_left);
+            this.top(_top);
+        })
     }
     addKeyController() {
 
@@ -111,7 +153,17 @@ class Player {
     top(val) {
         return this.el.style.top = val + "px"
     }
+    width() {
+        if (!this.$width)
+            this.$width = this.el.offsetWidth;
+        return this.$width;
+    }
 
+    height() {
+        if (!this.$height)
+            this.$height = this.el.offsetHeight;
+        return this.$height;
+    }
 
 }
 // 敌机
