@@ -48,13 +48,13 @@ class Game extends Base {
             }
             ele.style.backgroundImage = `url(images/loading${num}.png)`;
             num++;
-        }, 600);
+        }, 300);
         setTimeout(() => {
             clearInterval(timer);
-            ele.style.display = "none"
+            ele.remove();
             this.el.getElementsByClassName("logo")[0].remove();
             // 执行回调函数
-            callback ? callback() : '';
+           callback();
         }, 3000)
 
     };
@@ -72,15 +72,15 @@ class Game extends Base {
         setInterval(() => {
             if (Math.random() > 0.7)
                 this.enemies.add(new Enemy(Base.constant.PLANE_TYPE_BIG).init().move());
-        })
+        },2000)
         setInterval(() => {
             if (Math.random() > 0.5)
                 this.enemies.add(new Enemy(Base.constant.PLANE_TYPE_MID).init().move());
-        })
+        },1500)
         setInterval(() => {
-            if (Math.random() > 0.2)
+            if (Math.random() > 0.3)
                 this.enemies.add(new Enemy(Base.constant.PLANE_TYPE_SML).init().move());
-        })
+        },800)
     }
     // 背景图滚动
     bgMove() {
@@ -94,9 +94,11 @@ class Game extends Base {
     append(somebody) {
         this.el.appendChild(somebody.el);
     }
+    left(){
+        if(!this.$left){
+            this.$left = this.el.offsetLeft;
+        }
+        return this.$left;
+
+    }
 }
-
-let game = new Game();
-game.run();
-
-

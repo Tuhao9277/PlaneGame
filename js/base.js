@@ -12,20 +12,19 @@ class Base {
         return this.$height;
     }
     left(val) {
-        if (val !== undefined) {
-            this.el.style.left = val + "px";
-        }
-        else {
-            return this.el.offsetLeft;
-        }
-    }
-    top(val) {
-        if (val !== undefined)
-             this.el.style.top = val + "px";
-        else{
-            return this.el.offsetTop;
-        }
-    }
+		if (val !== undefined) {
+			this.el.style.left = val + "px";
+		} else {
+			return this.el.offsetLeft;
+		}
+	}
+	top(val) {
+		if (val !== undefined) {
+			this.el.style.top = val + "px";
+		} else {
+			return this.el.offsetTop;
+		}
+	}
 
 
 }

@@ -6,13 +6,14 @@ class Player extends Base {
             Player.instance = Object.create(Player.prototype);
             this.level = level;
         }
+        // this.interval = 200;
         return Player.instance;
     }
     // 初始化玩家数据
     init() {
         this.el = document.createElement("div");
         this.el.className = "my-warplain";
-        game.append(this);
+        this.show();
         // 位置
         this.left((game.width() / 2) - (this.width() / 2));
         this.top(game.height() - this.height());
@@ -24,10 +25,15 @@ class Player extends Base {
 
         // 子弹
         switch (this.level) {
-            case 4: this.interval = 1000; break;
-            case 3: this.interval = 600; break;
-            case 2: this.interval = 400; break;
-            case 1: this.interval = 200; break;
+            case '4':
+                this.interval = 1000;
+                break;
+            case '3': this.interval = 600;
+                break;
+            case '2': this.interval = 400;
+                break;
+            case '1': this.interval = 200;
+                break;
         }
         this.autoFile();
         return this;
@@ -44,25 +50,30 @@ class Player extends Base {
 
     }
     show() {
-
+        game.append(this);
+        return this;
     }
+   
+    // 自动开火
     autoFile() {
-        console.log("FIRE!")
+        
+        setInterval(() => {
+            new Bullet().init().move();
+
+        },200);
     }
     left(val) {
-        if (val) {
-            this.el.style.left = val + "px"
+        if (val !== undefined) {
+            this.el.style.left = val + "px";
         } else {
-            return this.offsetLeft;
+            return this.el.offsetLeft;
         }
     }
     top(val) {
-        if (val)
+        if (val !== undefined) {
             this.el.style.top = val + "px";
-        else {
-
-
-            return this.offsetTop;
+        } else {
+            return this.el.offsetTop;
         }
     }
 
